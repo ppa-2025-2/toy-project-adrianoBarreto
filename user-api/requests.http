@@ -37,3 +37,34 @@ Content-Type: application/json
     ],
     "company": "potato inc"
 }
+
+### 4. Criar um novo Ticket
+
+POST http://localhost:8080/api/v1/tickets
+Content-Type: application/json
+
+{
+    "creatorEmail": "batata@potato.com",
+    "recipientEmail": "batata@potato.com",
+    "observerEmails": [],
+    "subject": "Computador",
+    "action": "Instalar AutoCAD",
+    "details": "Nao sei qual versao...",
+    "location": "LAB 7"
+}
+
+### 5. Consultar todos os Tickets
+GET http://localhost:8080/api/v1/tickets
+
+### 6. Atualizar Status para ANDAMENTO
+
+PUT http://localhost:8080/api/v1/tickets/1/status
+Content-Type: application/json
+
+{
+    "newStatus": "ANDAMENTO",
+    "responsibleEmail": "batata@potato.com"
+}
+
+### 7. Consultar o Ticket específico
+GET http://localhost:8080/api/v1/tickets/1
