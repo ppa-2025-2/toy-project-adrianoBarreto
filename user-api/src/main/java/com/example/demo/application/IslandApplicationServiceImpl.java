@@ -1,9 +1,10 @@
-package com.example.demo.domain;
+package com.example.demo.application;
 
 import org.springframework.stereotype.Service;
 
-import com.example.demo.application.IslandApplicationService;
 import com.example.demo.controller.dto.AllocateUserDTO;
+import com.example.demo.domain.NoAvailableWorkstationException;
+import com.example.demo.domain.service.IslandDomainService;
 import com.example.demo.repository.IslandRepository;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.repository.WorkstationRepository;
@@ -14,17 +15,23 @@ import com.example.demo.repository.entity.Workstation;
 import jakarta.transaction.Transactional;
 
 @Service
-public class IslandService implements IslandApplicationService {
+public class IslandApplicationServiceImpl implements IslandApplicationService {
 
     private final IslandRepository islandRepository;
     private final UserRepository userRepository;
     private final WorkstationRepository workstationRepository;
+    private final IslandDomainService islandDomainService;
 
-    public IslandService(IslandRepository islandRepository, UserRepository userRepository,
-            WorkstationRepository workstationRepository) {
+    public IslandApplicationServiceImpl(
+            IslandRepository islandRepository, 
+            UserRepository userRepository,
+            WorkstationRepository workstationRepository,
+            IslandDomainService islandDomainService 
+    ) {
         this.islandRepository = islandRepository;
         this.userRepository = userRepository;
         this.workstationRepository = workstationRepository;
+        this.islandDomainService = islandDomainService;
     }
 
     @Transactional
@@ -42,29 +49,16 @@ public class IslandService implements IslandApplicationService {
                 throw new NoAvailableWorkstationException("Usuário já está alocado na workstation " + ws.getName());
             });
 
-        Workstation availableWorkstation = null;
-        for (Workstation ws : island.getWorkstations()) {
-            if (ws.getUser() == null) { 
-                availableWorkstation = ws;
-                break;
-            }
-        }
+        Workstation allocatedWorkstation = islandDomainService.alocar(island, user);
 
-        if (availableWorkstation == null) {
-            throw new NoAvailableWorkstationException("Nenhuma workstation disponível na ilha " + island.getName());
-        }
-
-        availableWorkstation.setUser(user);
-
-        return workstationRepository.save(availableWorkstation);
+        return workstationRepository.save(allocatedWorkstation);
     }
 
     @Transactional
     @Override
-    public Island setupTestIsland(String islandName, int workstationCount) {
+    public Island setupTestIsland(String islandName, int workstationCount) {     
         Island island = new Island();
         island.setName(islandName);
-
         for (int i = 1; i <= workstationCount; i++) {
             Workstation ws = new Workstation();
             ws.setName("WS-" + String.format("%02d", i));
