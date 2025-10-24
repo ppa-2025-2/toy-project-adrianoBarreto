@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.application.IslandApplicationService;
 import com.example.demo.controller.dto.AllocateUserDTO;
+import com.example.demo.controller.dto.SetupIslandDTO;
 import com.example.demo.repository.IslandRepository;
 import com.example.demo.repository.entity.Island;
 import com.example.demo.repository.entity.Workstation;
@@ -44,9 +45,9 @@ public class IslandController {
         return ResponseEntity.ok(islandRepository.findAll());
     }
 
-    @PostMapping("/setup")
-    public ResponseEntity<Island> setupTestIsland() {
-        Island island = islandService.setupTestIsland("Ilha de Testes Alpha", 5);
+    @PostMapping("/setup-test")
+    public ResponseEntity<Island> setupTestIsland(@RequestBody SetupIslandDTO dto) {
+        Island island = islandService.setupTestIsland(dto.islandName(), dto.workstationCount());
         return ResponseEntity.ok(island);
     }
 }

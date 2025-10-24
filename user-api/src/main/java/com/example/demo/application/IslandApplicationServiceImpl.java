@@ -41,7 +41,7 @@ public class IslandApplicationServiceImpl implements IslandApplicationService {
             .orElseThrow(() -> new IllegalArgumentException("Ilha não encontrada: " + islandId));
 
         workstationRepository.findByUserId(user.getId())
-            .ifPresent(ws -> {
+            .ifPresent(ws -> {                
                 throw new NoAvailableWorkstationException("Usuário já está alocado na workstation " + ws.getName());
             });
 

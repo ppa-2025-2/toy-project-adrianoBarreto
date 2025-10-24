@@ -81,7 +81,7 @@ Content-Type: application/json
     "roles": ["ROLE_USER"]
 }
 
-###
+### 
 POST http://localhost:8080/api/v1/users
 Content-Type: application/json
 
@@ -94,7 +94,7 @@ Content-Type: application/json
 }
 
 ### 1. Criar uma Ilha de Testes (com 2 vagas)
-# (Vamos usar 2 vagas para testar o limite)
+
 POST http://localhost:8080/api/v1/islands/setup-test
 Content-Type: application/json
 
@@ -145,6 +145,7 @@ Content-Type: application/json
     "roles": ["ROLE_USER"]
 }
 
+### 8. Tentar Alocar Usuário 3 (ERRO 409 - Ilha cheia)
 POST http://localhost:8080/api/v1/islands/1/allocate
 Content-Type: application/json
 
