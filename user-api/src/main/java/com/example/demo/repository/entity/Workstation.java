@@ -58,4 +58,19 @@ public class Workstation {
     public void setUser(User user) {
         this.user = user;
     }
+
+    public boolean isAvailable() {
+        return this.user == null;
+    }
+
+    public void ocupar(User user) {
+        if (!isAvailable()) {
+            throw new IllegalStateException("Workstation " + this.name + " já está ocupada por " + this.user.getHandle());
+        }
+        this.user = user;
+    }
+
+    public void liberar() {
+        this.user = null;
+    }
 }

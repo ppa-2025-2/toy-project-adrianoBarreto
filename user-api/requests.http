@@ -68,3 +68,86 @@ Content-Type: application/json
 
 ### 7. Consultar o Ticket específico
 GET http://localhost:8080/api/v1/tickets/1
+
+### 0. Crie usuários de teste (use o endpoint de usuário que você já tem)
+POST http://localhost:8080/api/v1/users
+Content-Type: application/json
+
+{
+    "name": "Usuario Teste 1",
+    "handle": "user1",
+    "email": "user1@test.com",
+    "password": "Password123",
+    "roles": ["ROLE_USER"]
+}
+
+###
+POST http://localhost:8080/api/v1/users
+Content-Type: application/json
+
+{
+    "name": "Usuario Teste 2",
+    "handle": "user2",
+    "email": "user2@test.com",
+    "password": "Password123",
+    "roles": ["ROLE_USER"]
+}
+
+### 1. Criar uma Ilha de Testes (com 2 vagas)
+# (Vamos usar 2 vagas para testar o limite)
+POST http://localhost:8080/api/v1/islands/setup-test
+Content-Type: application/json
+
+{
+    "islandName": "Ilha de Teste (2 vagas)",
+    "workstationCount": 2
+}
+
+### 2. Listar Ilhas (para pegar o ID da ilha criada)
+GET http://localhost:8080/api/v1/islands
+
+### 3. Alocar Usuário 1 (SUCESSO)
+
+POST http://localhost:8080/api/v1/islands/1/allocate
+Content-Type: application/json
+
+{
+    "userEmail": "user1@test.com"
+}
+
+### 4. Alocar Usuário 2 (SUCESSO)
+POST http://localhost:8080/api/v1/islands/1/allocate
+Content-Type: application/json
+
+{
+    "userEmail": "user2@test.com"
+}
+
+### 5. Listar Ilhas Novamente (para ver as vagas ocupadas)
+GET http://localhost:8080/api/v1/islands
+
+### 6. Tentar Alocar Usuário 1 DE NOVO (ERRO 409 - Já alocado)
+POST http://localhost:8080/api/v1/islands/1/allocate
+Content-Type: application/json
+
+{
+    "userEmail": "user1@test.com"
+}
+
+### 7. Tentar Alocar Usuário 3 (ERRO 409 - Ilha cheia)
+POST http://localhost:8080/api/v1/users
+Content-Type: application/json
+{
+    "name": "Usuario Teste 3",
+    "handle": "user3",
+    "email": "user3@test.com",
+    "password": "Password123",
+    "roles": ["ROLE_USER"]
+}
+
+POST http://localhost:8080/api/v1/islands/1/allocate
+Content-Type: application/json
+
+{
+    "userEmail": "user3@test.com"
+}

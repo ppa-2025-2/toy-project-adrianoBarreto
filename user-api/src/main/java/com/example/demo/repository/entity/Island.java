@@ -48,4 +48,22 @@ public class Island {
     public void setWorkstations(List<Workstation> workstations) {
         this.workstations = workstations;
     }
+
+    public Workstation alocar(User user) { 
+        for (Workstation ws : this.workstations) {
+            if (ws.isAvailable()) {
+                ws.ocupar(user);
+                return ws;
+            }
+        }
+
+        throw new com.example.demo.domain.NoAvailableWorkstationException(
+            "Nenhuma workstation disponível na ilha " + this.name
+        );
+    }
+
+    public void addWorkstation(Workstation workstation) {
+        this.workstations.add(workstation);
+        workstation.setIsland(this);
+    }
 }
